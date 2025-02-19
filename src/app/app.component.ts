@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, signal } from "@angular/core";
+import { Component, computed, effect, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 @Component({
@@ -19,9 +19,16 @@ export class AppComponent {
     name: "Hammer",
     price: 12,
   });
-  
+
+  exPrice = computed(() => this.selectedProduct().price * this.quantity());
+  color = computed(() => (this.exPrice() > 50 ? "green" : "blue"));
+
   constructor() {
-    console.log("In Constructor:", this.quantity());
+    console.log("In Constructor: ", this.quantity());
+
+    effect(() => console.log("In effect: ", this.quantity()));
+
+    this.quantity.update((q) => q * 2);
   }
 
   onQuantitySelected(qty: number) {
